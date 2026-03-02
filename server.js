@@ -50,18 +50,34 @@ app.post('/api/synthesize', async (req, res) => {
 
     if (!text) return res.status(400).json({ error: 'Text required' });
 
-    const request = {
-        input: { text },
-        voice: { languageCode: voiceName.split('-').slice(0, 2).join('-'), name: voiceName },
-        audioConfig: { audioEncoding: 'MP3', speakingRate: speed },
-    };
+    // Function to chunk text into parts under 5000 bytes (roughly 4500 chars to be safe)
+    const MAX_CHUNK_LENGTH = 4500;
+    const chunks = [];
+    for (let i = 0; i < text.length; i += MAX_CHUNK_LENGTH) {
+        chunks.push(text.substring(i, i + MAX_CHUNK_LENGTH));
+    }
+
+    console.log(`Processing text in ${chunks.length} chunk(s)...`);
 
     try {
-        console.log('Sending request to Google TTS...');
-        const [response] = await client.synthesizeSpeech(request);
-        console.log('TTS Response received successfully.');
+        const audioBuffers = [];
+        for (let i = 0; i < chunks.length; i++) {
+            console.log(`Synthesizing chunk ${i + 1}/${chunks.length}...`);
+            const request = {
+                input: { text: chunks[i] },
+                voice: { languageCode: voiceName.split('-').slice(0, 2).join('-'), name: voiceName },
+                audioConfig: { audioEncoding: 'MP3', speakingRate: speed },
+            };
+            const [response] = await client.synthesizeSpeech(request);
+            audioBuffers.push(response.audioContent);
+        }
+
+        console.log('All chunks synthesized. Combining audio...');
+        const combinedBuffer = Buffer.concat(audioBuffers);
+
+        console.log('TTS Response ready.');
         res.set('Content-Type', 'audio/mpeg');
-        res.send(response.audioContent);
+        res.send(combinedBuffer);
     } catch (err) {
         console.error('TTS Error:', err);
         res.status(500).json({ error: 'TTS failed: ' + (err.message || 'unknown error') });
