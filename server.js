@@ -46,6 +46,8 @@ app.get('/api/voices', (req, res) => res.json(VOICES));
 
 app.post('/api/synthesize', async (req, res) => {
     const { text, voiceName = 'en-US-Wavenet-D', speed = 1.0 } = req.body;
+    console.log(`TTS Request: voice=${voiceName}, speed=${speed}, textLength=${text?.length}`);
+
     if (!text) return res.status(400).json({ error: 'Text required' });
 
     const request = {
@@ -55,7 +57,9 @@ app.post('/api/synthesize', async (req, res) => {
     };
 
     try {
+        console.log('Sending request to Google TTS...');
         const [response] = await client.synthesizeSpeech(request);
+        console.log('TTS Response received successfully.');
         res.set('Content-Type', 'audio/mpeg');
         res.send(response.audioContent);
     } catch (err) {
