@@ -44,7 +44,8 @@ body {
     overflow: hidden;
 }
 
-.glass-bg::before, .glass-bg::after {
+.glass-bg::before,
+.glass-bg::after {
     content: '';
     position: absolute;
     width: 50vw;
@@ -69,8 +70,13 @@ body {
 }
 
 @keyframes blob-move {
-    from { transform: translate(0, 0); }
-    to { transform: translate(100px, 100px); }
+    from {
+        transform: translate(0, 0);
+    }
+
+    to {
+        transform: translate(100px, 100px);
+    }
 }
 
 .app-container {
@@ -141,7 +147,9 @@ header {
 }
 
 @media (max-width: 600px) {
-    .controls-grid { grid-template-columns: 1fr; }
+    .controls-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 .control-group {
@@ -296,7 +304,9 @@ textarea:focus {
 }
 
 /* Utils */
-.hidden { display: none; }
+.hidden {
+    display: none !important;
+}
 
 .loader-overlay {
     position: fixed;
@@ -324,8 +334,13 @@ textarea:focus {
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 .player-container {
@@ -338,13 +353,21 @@ textarea:focus {
 }
 
 @keyframes slideUp {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 audio {
     width: 100%;
-    filter: invert(100%) hue-rotate(180deg) brightness(1.5); /* Modernize default audio player */
+    filter: invert(100%) hue-rotate(180deg) brightness(1.5);
+    /* Modernize default audio player */
     border-radius: 8px;
 }
 
@@ -353,9 +376,20 @@ audio {
 }
 
 @keyframes pulse {
-    0% { transform: scale(0.95); opacity: 0.8; }
-    70% { transform: scale(1); opacity: 1; }
-    100% { transform: scale(0.95); opacity: 0.8; }
+    0% {
+        transform: scale(0.95);
+        opacity: 0.8;
+    }
+
+    70% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(0.95);
+        opacity: 0.8;
+    }
 }
 
 footer {
